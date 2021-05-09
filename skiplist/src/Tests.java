@@ -121,8 +121,6 @@ public class Tests {
 
 
   public static void main(String[] args) {
-    test(1000); //1000 elements
-
-
+    test(10000); //1000 elements
   }
 }

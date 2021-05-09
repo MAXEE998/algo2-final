@@ -5,14 +5,12 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
   private final double P = 1 / Math.E; // Optimal P-level
   private SeqNode<Key, Value> root; // starting level 1 at smallest key. Acts as -inf
   private SeqNode<Key, Value> cap; // mirror of root that acts as +inf.
-  private int height; // root height
   private int n;
   private int comparisons = 0;
 
   public SkipListSeqC() { // initialize from a single key,value pair
     this.root = new SeqNode<Key, Value>(SeqNode.Type.root);
     this.cap = new SeqNode<Key, Value>(SeqNode.Type.cap);
-    this.height = 1;
     this.n = 0;
   }
 
@@ -56,6 +54,7 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
     }
   }
 
+  /*
   public void insert(Key key, Value val) {
 
     try {
@@ -111,6 +110,50 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
       n++;
     }
   }
+*/
+  public void insert(Key key, Value val) {
+
+    int levels = levels();
+
+    //Adjusts height of root / terminal . Same for cap
+    increaseEnds(levels);
+
+    SeqNode<Key, Value>[] backNodes = screen(key);
+    if (backNodes == null)
+      throw new IllegalArgumentException("Cannot add Node with key: " + key + ". A node with key already exits");
+
+
+    //creating new node
+    SeqNode<Key, Value> newNode = new SeqNode<Key, Value>(key, val);
+
+    //building new node to proper height
+    for (int i = 0; i < levels; i++) {
+      newNode.nexts.add(new SeqNode<Key, Value>());
+      newNode.prevs.add(new SeqNode<Key, Value>());
+    }
+
+    int i = levels - 1;
+    System.out.println("Levels is " + levels);
+
+    //builds of a vertical stack of nodes from top to bottom and links them forward and back progressively
+    while (i >= 0) {
+      SeqNode<Key, Value> backNode = backNodes[i];
+
+      SeqNode<Key, Value> frontNode = backNodes[i].nexts.get(i);
+
+      //linking backNode to newNode
+      newNode.prevs.set(i, backNode);
+      backNode.nexts.set(i, newNode);
+
+      //linking frontNode to newNode
+      frontNode.prevs.set(i, newNode);
+      newNode.nexts.set(i, frontNode);
+
+      i--;
+    }
+    n++;
+
+  }
 
   public boolean contains(Key key) {
     try {
@@ -147,6 +190,13 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
       //linking the root and cap
       root.nexts.set(root.nexts.size() - 1, cap);
       cap.prevs.set(root.nexts.size() - 1, root);
+    }
+  }
+
+  private void decreaseEnds() {
+    while (root.nexts.get(root.height() - 1) == cap) {
+      root.nexts.remove(root.height() - 1);
+      cap.prevs.remove(root.height() - 1);
     }
   }
 
@@ -209,6 +259,27 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
       }
     }
     throw new NoSuchElementException("No Value for key:" + key);
+  }
+
+  //finds the backNodes necessary for an insertion
+  private SeqNode<Key, Value>[] screen(Key key) {
+
+    SeqNode<Key, Value>[] backNodes = new SeqNode[root.height()];
+    SeqNode<Key, Value> currentNode = root;
+    int i = root.height() - 1;
+
+    while (currentNode.getType() != SeqNode.Type.cap && i >= 0) {
+      if (currentNode.nexts.get(i).isLess(key)) { //most common case
+        currentNode = currentNode.nexts.get(i);
+
+      } else if (currentNode.nexts.get(i).equals(key)) {
+        return null;
+      } else { // if !(currentNode.nexts.get(i).isLess(key)) then go down a level
+        backNodes[i] = currentNode;
+        i--;
+      }
+    }
+    return backNodes;
   }
 
 
