@@ -113,6 +113,7 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
 */
   public void insert(Key key, Value val) {
 
+
     int levels = levels();
 
     //Adjusts height of root / terminal . Same for cap
@@ -122,6 +123,8 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
     if (backNodes == null)
       throw new IllegalArgumentException("Cannot add Node with key: " + key + ". A node with key already exits");
 
+    System.out.println(this);
+    decreaseEnds();
 
     //creating new node
     SeqNode<Key, Value> newNode = new SeqNode<Key, Value>(key, val);
@@ -194,9 +197,11 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
   }
 
   private void decreaseEnds() {
-    while (root.nexts.get(root.height() - 1) == cap) {
+    if (root.nexts.get(root.height() - 1) == cap && root.height() > 1) {
+      System.out.println("Trying to decrease ends | root.height = " + root.height());
       root.nexts.remove(root.height() - 1);
       cap.prevs.remove(root.height() - 1);
+      decreaseEnds();
     }
   }
 
@@ -267,6 +272,7 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
     SeqNode<Key, Value>[] backNodes = new SeqNode[root.height()];
     SeqNode<Key, Value> currentNode = root;
     int i = root.height() - 1;
+
 
     while (currentNode.getType() != SeqNode.Type.cap && i >= 0) {
       if (currentNode.nexts.get(i).isLess(key)) { //most common case

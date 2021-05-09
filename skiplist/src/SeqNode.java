@@ -91,6 +91,7 @@ public class SeqNode<Key extends Comparable<Key>, Value> {
         str += "{" + currentNode.key + ", " + currentNode.value + "} --> ";
         currentNode = currentNode.nexts.get(i);
       }
+      str += "{" + currentNode.getKey() + ", " + currentNode.getValue() + "}";
       str += "\n";
     }
 
