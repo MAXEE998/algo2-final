@@ -48,6 +48,7 @@ public class Tests {
 
 
 		// Initialization
+		Runtime.getRuntime().gc();
 		beforeMem = Runtime.getRuntime().freeMemory();
 		startTime = System.nanoTime();
 		SkipListSeqC<Integer, String> seqSl = new SkipListSeqC<>(keys, vals);
@@ -59,6 +60,7 @@ public class Tests {
 
 		System.out.println(seqSl);
 
+		Runtime.getRuntime().gc();
 		beforeMem = Runtime.getRuntime().freeMemory();
 		startTime = System.nanoTime();
 		SkipListLinkedC<Integer, String> linkedSl = new SkipListLinkedC<>(keys, vals);
