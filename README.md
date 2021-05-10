@@ -4,11 +4,13 @@
 ![alt text](https://github.com/jessetuglu/skiplist/blob/main/sl.png?raw=true)
 ### Java:
 
-In this repository are two implementations of the skiplist. First, a sequential version, which uses 1 node per <key, value> pair that
-contains arraylists of pointers to the corresponding previous and next nodes at each level. Secondly, a linked implementation where each
-<key, value> pair has an _i levels_ number of nodes, one at each level, each with their own pointers to the corresponding previous and next 
-nodes.
-
+- In this repository are two implementations of the skiplist.
+    - First, a sequential version, which uses 1 node per <key, value> pair that contains arraylists of pointers to the corresponding previous and next nodes at each level.
+        - This implementation is immutable, so once a node is created it's key and value cannot be changed. 
+        - Any new <key, value> pair that matches the key of an already existing node will be rejected.
+    - Secondly, linked implementation where each <key, value> pair has an _i levels_ number of nodes, one at each level, each with their own pointers to the corresponding previous and next nodes.
+        - This implementation is mutable.
+        - Any new <key, value> pair that matches the key will override the existing value.
 #### SkipList Interface
 ```java
     public interface SkipList<Key extends Comparable<Key>, Value> {
