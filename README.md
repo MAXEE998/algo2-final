@@ -3,6 +3,12 @@
 ### Repo Contains: Linked and Sequential Implementations of Immutable Skiplists + Visualization
 ![alt text](https://github.com/jessetuglu/skiplist/blob/main/sl.png?raw=true)
 ### Java:
+
+In this repository are two implementations of the skiplist. First, sequential version, which uses 1 node per key, value pair that
+contains arraylists of pointers to the corresponding previous and next nodes at each level. Secondly, a linked implementation where each
+key, value pair has an _i levels_ number of nodes, one at each level, each with their own pointers to the corresponding previous and next 
+nodes.
+
 #### SkipList Interface
 ```java
     public interface SkipList<Key extends Comparable<Key>, Value> {
