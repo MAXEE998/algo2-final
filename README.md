@@ -31,6 +31,6 @@
         int size();
     }
 ```
-### Typescript ():
+### Typescript (<a href="https://jessetuglu.github.io/skiplist">Typescript Visualization</a>):
 See readme inside /vis for more information and running the project locally.
 
