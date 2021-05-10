@@ -127,7 +127,7 @@ public class LinkedNode<Key extends Comparable<Key>, Value> {
 		return s;
 	}
 
-	public void replace(Value val) {
+	public void replace(Value val) { //replaces a chain
 		LinkedNode<Key, Value> tmp = this;
 		while (tmp != null) {
 			tmp.setValue(val);
