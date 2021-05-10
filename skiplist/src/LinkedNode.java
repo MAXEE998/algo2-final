@@ -67,16 +67,8 @@ public class LinkedNode<Key extends Comparable<Key>, Value> {
 		return this.key.compareTo(otherKey) < 0;
 	}
 
-	// gives node instance back to garbage
-	private void wipe() {
-		this.prev = null;
-		this.bottom = null;
-		this.next = null;
-		this.value = null;
-		this.key = null;
-	}
-
 	// removes node from skiplist
+
 	public void dettach() {
 		LinkedNode<Key, Value> left = prev;
 		LinkedNode<Key, Value> right = next;
@@ -84,8 +76,8 @@ public class LinkedNode<Key extends Comparable<Key>, Value> {
 		right.prev = left;
 		wipe();
 	}
-
 	// checks if two nodes are equal
+
 	public boolean equals(Key otherKey) {
 		if (this.key == null)
 			return false;
@@ -105,5 +97,15 @@ public class LinkedNode<Key extends Comparable<Key>, Value> {
 			tmp.value = val;
 			tmp = tmp.bottom;
 		}
+	}
+	// PRIVATE
+
+	// gives node instance back to garbage
+	private void wipe() {
+		this.prev = null;
+		this.bottom = null;
+		this.next = null;
+		this.value = null;
+		this.key = null;
 	}
 }
