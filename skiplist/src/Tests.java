@@ -5,6 +5,8 @@ public class Tests {
 
   private static class Log {
     public void print(String test, long time, String units) {
+      if (units.equals("ms"))
+        time = time / 1000000;
       System.out.println(String.format("%s: %d%s", test, time, units));// nano seconds
     }
   }
@@ -49,14 +51,15 @@ public class Tests {
     startTime = System.nanoTime();
     SkipListSeqC<Integer, String> seqSl = new SkipListSeqC<>(keys, vals);
     endTime = System.nanoTime();
-    log.print("Sequential Initialization", (endTime - startTime), "ns");
+    log.print("Sequential Initialization", (endTime - startTime), "ms");
 
     System.out.println(seqSl);
 
+    /*
     startTime = System.nanoTime();
     SkipListLinkedC<Integer, String> linkedSl = new SkipListLinkedC<>(keys, vals);
     endTime = System.nanoTime();
-    log.print("Linked Initialization", (endTime - startTime), "ns");
+    log.print("Linked Initialization", (endTime - startTime), "ms"); */
     // Initialization End
 
     // Get
@@ -113,13 +116,13 @@ public class Tests {
     } *
     log.print("Linked DELETE", linkedDeleteRecord.avg(), "ns");
 */
-    assert (seqSl.size() == linkedSl.size() && linkedSl.size() == 0);
+    //assert (seqSl.size() == linkedSl.size() && linkedSl.size() == 0);
     //Delete End
-
   }
 
 
   public static void main(String[] args) {
     test(10000); //10k elements
+    test(2000); //2k elements
   }
 }

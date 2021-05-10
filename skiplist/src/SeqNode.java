@@ -2,8 +2,8 @@ import java.util.ArrayList;
 
 public class SeqNode<Key extends Comparable<Key>, Value> {
 
-  public ArrayList<SeqNode<Key, Value>> prevs; //make private with accessor methods
-  public ArrayList<SeqNode<Key, Value>> nexts; //make private with accessor methods
+  public ArrayList<SeqNode<Key, Value>> prevs;
+  public ArrayList<SeqNode<Key, Value>> nexts;
 
   private Key key;
   private Value value;
@@ -44,25 +44,13 @@ public class SeqNode<Key extends Comparable<Key>, Value> {
     this(Type.node);
   }
 
-  public boolean isLess(SeqNode<Key, Value> other) {
-    if (this.type == Type.root)
-      return true;
-    else if (this.type == Type.cap)
-      return false;
-    else
-      return this.key.compareTo(other.key) < 0;
-  }
 
   public boolean isLess(Key otherKey) {
-    // System.out.println("\n +++++++++++ isLess just called. this.key is " + this.key + " with type = " + this.getType() + " | otherKey = " + otherKey);
     if (this.type == Type.root) {
-      //System.out.println("Branch 1");
       return true;
     } else if (this.type == Type.cap) {
-      // System.out.println("Branch 2");
       return false;
     } else {
-      //System.out.println("Branch 3");
       return this.key.compareTo(otherKey) < 0;
     }
   }
