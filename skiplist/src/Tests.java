@@ -43,21 +43,29 @@ public class Tests {
 		}
 		long startTime;
 		long endTime;
+		long beforeMem;
+		long afterMem;
 
 
 		// Initialization
+		beforeMem = Runtime.getRuntime().freeMemory();
 		startTime = System.nanoTime();
 		SkipListSeqC<Integer, String> seqSl = new SkipListSeqC<>(keys, vals);
 		endTime = System.nanoTime();
+		afterMem = Runtime.getRuntime().freeMemory();
 		long seqSlInsertionTime = (endTime - startTime);
+		long seqMem = afterMem - beforeMem;
 		log.print("Sequential Initialization", (endTime - startTime), "ns");
 
 		System.out.println(seqSl);
 
+		beforeMem = Runtime.getRuntime().freeMemory();
 		startTime = System.nanoTime();
 		SkipListLinkedC<Integer, String> linkedSl = new SkipListLinkedC<>(keys, vals);
 		endTime = System.nanoTime();
+		afterMem = Runtime.getRuntime().freeMemory();
 		long linkedSlInsertionTime = (endTime - startTime);
+		long linkedMem = afterMem - beforeMem;
 		log.print("Linked Initialization", (endTime - startTime), "ns");
 		System.out.println(linkedSl);
 		// Initialization End
@@ -119,6 +127,11 @@ public class Tests {
 			System.out.println("LINKED WAS FASTER BY: " + (seqSlInsertionTime - linkedSlInsertionTime) + "ns");
 		else
 			System.out.println("SEQ WAS FASTER BY: " + (linkedSlInsertionTime - seqSlInsertionTime) + "ns");
+		System.out.println("INSERTION MEMORY: ");
+		if (seqMem > linkedMem)
+			System.out.println("LINKED WAS BETTER BY: " + (seqMem - linkedMem) + "bytes");
+		else
+			System.out.println("SEQ WAS BETTER BY: " + (linkedMem - seqMem) + "bytes");
 		System.out.println("GET: ");
 		log.print("Linked GET: ", linkedGetRecord.avg(), "ns");
 		log.print("Seq GET: ", seqGetRecord.avg(), "ns");
