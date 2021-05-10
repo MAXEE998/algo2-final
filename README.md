@@ -32,5 +32,5 @@
     }
 ```
 ### Typescript:
-See readme inside /vis for more information
+See readme inside /vis for more information and running the project locally.
 
