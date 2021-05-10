@@ -111,7 +111,7 @@ class Grid extends React.Component<any, any>{
 
                     <label>{this.state.search_key === "" && this.state.search_result === null ? "": "Search Result: " + this.state.search_result}</label><br/><br/><br/>
                 </div>
-                <div ref="skiplist" className={"container-xxl mx-auto skiplist"}>
+                <div ref="skiplist" className={"container mx-auto skiplist"}>
                     {this.skipGrid()}
                 </div>
             </div>

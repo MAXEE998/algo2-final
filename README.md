@@ -1,6 +1,6 @@
 # SkipList
 ### Writers: Cole Dumas and Jesse Tuglu
-### Repo Contains: Linked and Sequential Implementations of Immutable Skiplists + Typescript Visualization
+### Repo Contains: Linked and Sequential Implementations of Immutable Skiplists + <a href="https://jessetuglu.github.io/skiplist">Typescript Visualization</a>
 ![alt text](https://github.com/jessetuglu/skiplist/blob/main/sl.png?raw=true)
 ### Java:
 
@@ -31,6 +31,6 @@
         int size();
     }
 ```
-### Typescript:
+### Typescript ():
 See readme inside /vis for more information and running the project locally.
 
