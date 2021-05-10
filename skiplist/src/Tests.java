@@ -37,7 +37,7 @@ public class Tests {
     String[] vals = new String[n];
 
     for (int i = 0; i < n; i++) {
-      int key = (int) (Math.random() * 100);
+      int key = (int) (Math.random() * 1000 * i);
       keys[i] = key;
       vals[i] = "TEST#" + key;
     }
@@ -63,7 +63,6 @@ public class Tests {
     Record seqGetRecord = new Record();
     for (int i = 0; i < seqSl.size(); i++) {
       startTime = System.nanoTime();
-      System.out.println("\n\nAbout to search for this key: " + keys[i]);
       String val = seqSl.get(keys[i]);
       endTime = System.nanoTime();
       seqGetRecord.add("Get Test:" + i, endTime - startTime);
@@ -121,6 +120,6 @@ public class Tests {
 
 
   public static void main(String[] args) {
-    test(10000); //1000 elements
+    test(10000); //10k elements
   }
 }

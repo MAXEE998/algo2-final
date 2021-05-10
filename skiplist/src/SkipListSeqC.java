@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipList<Key, Value> {
@@ -113,18 +114,18 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
 */
   public void insert(Key key, Value val) {
 
-
     int levels = levels();
 
     //Adjusts height of root / terminal . Same for cap
     increaseEnds(levels);
 
     SeqNode<Key, Value>[] backNodes = screen(key);
-    if (backNodes == null)
-      throw new IllegalArgumentException("Cannot add Node with key: " + key + ". A node with key already exits");
 
-    System.out.println(this);
-    decreaseEnds();
+    if (backNodes == null) {
+      decreaseEnds();
+      throw new IllegalArgumentException("Cannot add Node with key: " + key + ". A node with key already exits");
+    }
+
 
     //creating new node
     SeqNode<Key, Value> newNode = new SeqNode<Key, Value>(key, val);
@@ -136,7 +137,6 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
     }
 
     int i = levels - 1;
-    System.out.println("Levels is " + levels);
 
     //builds of a vertical stack of nodes from top to bottom and links them forward and back progressively
     while (i >= 0) {
@@ -198,7 +198,6 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
 
   private void decreaseEnds() {
     if (root.nexts.get(root.height() - 1) == cap && root.height() > 1) {
-      System.out.println("Trying to decrease ends | root.height = " + root.height());
       root.nexts.remove(root.height() - 1);
       cap.prevs.remove(root.height() - 1);
       decreaseEnds();
@@ -270,14 +269,13 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
   private SeqNode<Key, Value>[] screen(Key key) {
 
     SeqNode<Key, Value>[] backNodes = new SeqNode[root.height()];
+    Arrays.fill(backNodes, root);
     SeqNode<Key, Value> currentNode = root;
     int i = root.height() - 1;
-
 
     while (currentNode.getType() != SeqNode.Type.cap && i >= 0) {
       if (currentNode.nexts.get(i).isLess(key)) { //most common case
         currentNode = currentNode.nexts.get(i);
-
       } else if (currentNode.nexts.get(i).equals(key)) {
         return null;
       } else { // if !(currentNode.nexts.get(i).isLess(key)) then go down a level
