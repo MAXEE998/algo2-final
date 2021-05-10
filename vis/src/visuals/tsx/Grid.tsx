@@ -76,8 +76,8 @@ class Grid extends React.Component<any, any>{
         this.sl = new SkipListC();
         for (let i: number = 0; i < this.state.size; i++){
             let key: number = Math.floor(Math.random() * 100);
-            while (key === 0 || this.sl.get(key).val !== null){
-                key = Math.floor(Math.random() * 100); //handle weird TS? bug
+            while (this.sl.get(key).val !== null){
+                key = Math.floor(Math.random() * 100); // allow for a speedier animation
             }
             this.sl.insert(key, key);
         }

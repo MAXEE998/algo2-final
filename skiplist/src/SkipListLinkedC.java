@@ -48,9 +48,8 @@ public class SkipListLinkedC<Key extends Comparable<Key>, Value> implements Skip
 
 	// main insertion method for new nodes
 	public void insert(Key key, Value val) {
-		LinkedNode<Key, Value> beginning;
 		try {
-			beginning = search(key); //returns the topmost matching value (if any)
+			LinkedNode<Key, Value> beginning = search(key); //returns the topmost matching value (if any)
 			beginning.replace(val); //updates that nodes children
 			return;
 		} catch (NoSuchElementException e) {
@@ -96,10 +95,7 @@ public class SkipListLinkedC<Key extends Comparable<Key>, Value> implements Skip
 			throw new IndexOutOfBoundsException("Invalid Input! Lengths must be the same.");
 		else
 			for (int i = 0; i < keys.length; i++) {
-				try {
-					insert(keys[i], vals[i]);
-				} catch (IllegalArgumentException e) {
-				}
+				insert(keys[i], vals[i]);
 			}
 	}
 

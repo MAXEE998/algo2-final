@@ -137,7 +137,7 @@ export class SkipListC implements SkipList{
             i++;
         }
         let col: SkipListNode[] = [];
-        for (let k:number = 1; k<=this.start.nexts.length; k++){
+        for (let k:number = 1; k <= this.start.nexts.length; k++){
             col.push(tmp);
         }
         cols.push(col)
