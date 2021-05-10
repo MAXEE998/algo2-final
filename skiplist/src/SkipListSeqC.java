@@ -7,7 +7,6 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
 	private SeqNode<Key, Value> root; // starting level 1 at smallest key. Acts as -inf
 	private SeqNode<Key, Value> cap; // mirror of root that acts as +inf.
 	private int n;
-	private int comparisons = 0;
 
 	public SkipListSeqC() { // initialize from a single key,value pair
 		this.root = new SeqNode<Key, Value>(SeqNode.Type.root);
@@ -55,63 +54,6 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
 		}
 	}
 
-	/*
-	public void insert(Key key, Value val) {
-
-	  try {
-		search(key);
-		return;
-	  } catch (NoSuchElementException e) {
-
-		int levels = levels();
-
-		//Adjusts height of root / terminal . Same for cap
-		increaseEnds(levels);
-
-
-		//creating new node
-		SeqNode<Key, Value> newNode = new SeqNode<Key, Value>(key, val);
-
-		//building new node to proper height
-		for (int i = 0; i < levels; i++) {
-		  newNode.nexts.add(new SeqNode<Key, Value>());
-		  newNode.prevs.add(new SeqNode<Key, Value>());
-		}
-
-		int i = levels - 1;
-
-		//builds of a vertical stack of nodes from top to bottom and links them forward and back progressively
-		while (i >= 0) {
-		  SeqNode<Key, Value> backNode = root;
-
-		  //clean up conditional
-		  while (i < backNode.height() && backNode.nexts.get(i) != cap && backNode.nexts.get(i).isLess(newNode)) {
-			backNode = backNode.nexts.get(i);
-		  }
-
-		  if (backNode.nexts.get(i).equals(key)) {
-			throw new IllegalArgumentException("Cannot add Node with key: " + key + ". A node with key already exits");
-		  }
-
-		  //Setting the front node
-		  SeqNode<Key, Value> frontNode = cap;
-		  if (backNode.nexts.get(i) != null)
-			frontNode = backNode.nexts.get(i);
-
-		  //linking backNode to newNode
-		  newNode.prevs.set(i, backNode);
-		  backNode.nexts.set(i, newNode);
-
-		  //linking frontNode to newNode
-		  frontNode.prevs.set(i, newNode);
-		  newNode.nexts.set(i, frontNode);
-
-		  i--;
-		}
-		n++;
-	  }
-	}
-  */
 	public void insert(Key key, Value val) {
 
 		int levels = levels();
@@ -213,15 +155,9 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
 
 			if (currentNode.nexts.get(i).isLess(key)) { //most common case
 				currentNode = currentNode.nexts.get(i);
-				comparisons++;
-
 			} else if (currentNode.nexts.get(i).equals(key)) {
-				comparisons++; //needed here?
-
 				return currentNode.nexts.get(i);
 			} else { // if !(currentNode.nexts.get(i).isLess(key)) then go down a level
-				comparisons++;
-
 				i--;
 			}
 		}
