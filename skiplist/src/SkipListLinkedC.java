@@ -115,7 +115,7 @@ public class SkipListLinkedC<Key extends Comparable<Key>, Value> implements Skip
 		for (LinkedNode<Key, Value> level = start; level != null; level = level.bottom) {
 			LinkedNode<Key, Value> currentNode = level;
 			while (currentNode.getType() != LinkedNode.Type.cap) {
-				s += "{" + currentNode.getKey() + ", " + currentNode.getValue() + ", " + currentNode.getLevel() + "} -->";
+				s += "{" + currentNode.getKey() + ", " + currentNode.getValue() + "} -->";
 				currentNode = currentNode.next;
 			}
 			s += "{" + currentNode.getKey() + ", " + currentNode.getValue() + "}";

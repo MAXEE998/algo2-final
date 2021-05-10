@@ -134,28 +134,40 @@ public class Tests {
 
 		}
 
+		Record javaTDeleteRecord = new Record();
+		for (int i = 0; i < linkedSl.size(); i++) {
+			startTime = System.nanoTime();
+			try {
+				slt.remove(keys[i]);
+			} catch (NoSuchElementException e) {
+			}
+			endTime = System.nanoTime();
+			javaTDeleteRecord.add("Get Test:" + i, endTime - startTime);
+
+		}
+
 		assert (seqSl.size() == linkedSl.size() && linkedSl.size() == 0);
 		//Delete End
 
 
 		// Edge Case Section
 		try {
-			seqSl.get((int) Math.random() * 1000);
+			seqSl.get((int) (Math.random() * 1000));
 		} catch (NoSuchElementException e) {
 			System.out.println("passed.");
 		}
 		try {
-			seqSl.delete((int) Math.random() * 1000);
+			seqSl.delete((int) (Math.random() * 1000));
 		} catch (NoSuchElementException e) {
 			System.out.println("passed.");
 		}
 		try {
-			seqSl.get((int) Math.random() * 1000);
+			linkedSl.get((int) (Math.random() * 1000));
 		} catch (NoSuchElementException e) {
 			System.out.println("passed.");
 		}
 		try {
-			linkedSl.delete((int) Math.random() * 1000);
+			linkedSl.delete((int) (Math.random() * 1000));
 		} catch (NoSuchElementException e) {
 			System.out.println("passed.");
 		}
@@ -180,6 +192,7 @@ public class Tests {
 		System.out.println("DELETE: ");
 		log.print("Linked DELETE: ", linkedDeleteRecord.avg(), "ns");
 		log.print("Seq DELETE: ", seqDeleteRecord.avg(), "ns");
+		log.print("Java DELETE: ", javaTDeleteRecord.avg(), "ns");
 	}
 
 	public static void main(String[] args) {
