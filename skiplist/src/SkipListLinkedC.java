@@ -11,7 +11,7 @@ public class SkipListLinkedC<Key extends Comparable<Key>, Value> implements Skip
 	public SkipListLinkedC() {
 		this.start = new LinkedNode<Key, Value>(LinkedNode.Type.root, 1);
 		this.terminus = new LinkedNode<Key, Value>(LinkedNode.Type.cap, 1);
-		this.start.setNext(terminus);
+		this.start.next = terminus;
 		this.n = 0;
 	}
 
@@ -30,7 +30,7 @@ public class SkipListLinkedC<Key extends Comparable<Key>, Value> implements Skip
 	public void delete(Key key) {
 		LinkedNode<Key, Value> top = search(key);
 		while (top != null && top.getLevel() > 0) {
-			LinkedNode<Key, Value> tmp = top.getBottom();
+			LinkedNode<Key, Value> tmp = top.bottom;
 			top.dettach();
 			top = tmp;
 		}
@@ -72,18 +72,18 @@ public class SkipListLinkedC<Key extends Comparable<Key>, Value> implements Skip
 			if (backNode.next != null)
 				frontNode = backNode.next;
 
-			backNode.setNext(node);
-			node.setPrev(backNode);
+			backNode.next = node;
+			node.prev = backNode;
 
-			frontNode.setPrev(node);
-			node.setNext(frontNode);
+			frontNode.prev = node;
+			node.next = frontNode;
 
 			levelNode = levelNode.bottom;
 			if (tmp.getType() == LinkedNode.Type.cap) { //tmp is placeholder to enable stitching levels of nodes together.
 				tmp = node;
 				continue;
 			}
-			tmp.setBottom(node);
+			tmp.bottom = node;
 			tmp = node;
 		}
 		n++;
@@ -93,10 +93,9 @@ public class SkipListLinkedC<Key extends Comparable<Key>, Value> implements Skip
 	public void insert(Key[] keys, Value[] vals) {
 		if (keys.length != vals.length)
 			throw new IndexOutOfBoundsException("Invalid Input! Lengths must be the same.");
-		else
-			for (int i = 0; i < keys.length; i++) {
-				insert(keys[i], vals[i]);
-			}
+		for (int i = 0; i < keys.length; i++) {
+			insert(keys[i], vals[i]);
+		}
 	}
 
 	// returns if skiplist is empty
@@ -157,8 +156,7 @@ public class SkipListLinkedC<Key extends Comparable<Key>, Value> implements Skip
 	private int randomLevel() {
 		if (Math.random() < P)
 			return 1 + randomLevel();
-		else
-			return 1; // Min number is 1
+		return 1; // Min number is 1
 	}
 
 	// builds up the start and terminus nodes to match the generated height of a new node
@@ -166,7 +164,7 @@ public class SkipListLinkedC<Key extends Comparable<Key>, Value> implements Skip
 		while (l > start.getLevel()) {
 			LinkedNode<Key, Value> startLevel = new LinkedNode<Key, Value>(start, null, null, null, null, LinkedNode.Type.root, start.getLevel() + 1);
 			LinkedNode<Key, Value> termLevel = new LinkedNode<Key, Value>(terminus, startLevel, null, null, null, LinkedNode.Type.cap, startLevel.getLevel() + 1);
-			startLevel.setNext(termLevel);
+			startLevel.next = (termLevel);
 			start = startLevel;
 			terminus = termLevel;
 		}

@@ -5,15 +5,15 @@ public class LinkedNode<Key extends Comparable<Key>, Value> {
 
 	private Key key;
 	private Value value;
+	private LinkedNode.Type type;
+	private int level;
 
 	enum Type {
 		root,
 		node,
 		cap
-	}
 
-	private LinkedNode.Type type;
-	private int level;
+	}
 
 	public LinkedNode(LinkedNode<Key, Value> bottom, LinkedNode<Key, Value> prev, LinkedNode<Key, Value> next, Key key, Value value, Type t, int level) {
 		this.bottom = bottom;
@@ -33,14 +33,6 @@ public class LinkedNode<Key extends Comparable<Key>, Value> {
 		this(null, null, null, key, val, t, level);
 	}
 
-	public LinkedNode<Key, Value> getBottom() {
-		return this.bottom;
-	}
-
-	public LinkedNode<Key, Value> getNext() {
-		return this.next;
-	}
-
 	public int getLevel() {
 		return this.level;
 	}
@@ -53,22 +45,6 @@ public class LinkedNode<Key extends Comparable<Key>, Value> {
 		return this.value;
 	}
 
-	public void setValue(Value val) {
-		this.value = val;
-	}
-
-	public void setNext(LinkedNode<Key, Value> next) {
-		this.next = next;
-	}
-
-	public void setPrev(LinkedNode<Key, Value> prev) {
-		this.prev = prev;
-	}
-
-	public void setBottom(LinkedNode<Key, Value> bottom) {
-		this.bottom = bottom;
-	}
-
 	public Type getType() {
 		return this.type;
 	}
@@ -79,8 +55,7 @@ public class LinkedNode<Key extends Comparable<Key>, Value> {
 			return true;
 		else if (this.type == LinkedNode.Type.cap)
 			return false;
-		else
-			return this.key.compareTo(other.key) < 0;
+		return this.key.compareTo(other.key) < 0;
 	}
 
 	// another node's key
@@ -89,8 +64,7 @@ public class LinkedNode<Key extends Comparable<Key>, Value> {
 			return true;
 		else if (this.type == Type.cap)
 			return false;
-		else
-			return this.key.compareTo(otherKey) < 0;
+		return this.key.compareTo(otherKey) < 0;
 	}
 
 	// gives node instance back to garbage
@@ -106,8 +80,8 @@ public class LinkedNode<Key extends Comparable<Key>, Value> {
 	public void dettach() {
 		LinkedNode<Key, Value> left = prev;
 		LinkedNode<Key, Value> right = next;
-		left.setNext(right);
-		right.setPrev(left);
+		left.next = right;
+		right.prev = left;
 		wipe();
 	}
 
@@ -115,9 +89,7 @@ public class LinkedNode<Key extends Comparable<Key>, Value> {
 	public boolean equals(Key otherKey) {
 		if (this.key == null)
 			return false;
-		else {
-			return this.key.compareTo(otherKey) == 0;
-		}
+		return this.key.compareTo(otherKey) == 0;
 	}
 
 	@Override
@@ -130,7 +102,7 @@ public class LinkedNode<Key extends Comparable<Key>, Value> {
 	public void replace(Value val) { //replaces a chain
 		LinkedNode<Key, Value> tmp = this;
 		while (tmp != null) {
-			tmp.setValue(val);
+			tmp.value = val;
 			tmp = tmp.bottom;
 		}
 	}

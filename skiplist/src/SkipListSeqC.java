@@ -23,8 +23,6 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
 		return search(key).getValue();
 	}
 
-	//should we delete multiples? Should we allow for multiples at all?
-
 	public void delete(Key key) {
 		SeqNode<Key, Value> node = search(key);
 
@@ -142,8 +140,7 @@ public class SkipListSeqC<Key extends Comparable<Key>, Value> implements SkipLis
 	private int levels() {
 		if (Math.random() < P)
 			return 1 + levels();
-		else
-			return 1; // Min number is 1
+		return 1; // Min number is 1
 	}
 
 	private SeqNode<Key, Value> search(Key key) {

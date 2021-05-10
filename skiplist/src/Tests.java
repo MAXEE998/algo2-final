@@ -198,6 +198,6 @@ public class Tests {
 	public static void main(String[] args) {
 		test(1000); //1k elements
 		test(10000); //10k elements
-		test(100000); //10k elements
+		test(100000); //100k elements
 	}
 }

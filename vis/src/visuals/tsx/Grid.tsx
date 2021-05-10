@@ -62,10 +62,11 @@ class Grid extends React.Component<any, any>{
             }, 200 * i);
         }
         this.setState({search_result: res.val === null ? "No Value Found": res.val});
+        setTimeout(()=>{this.renderList();}, 2)
+
     }
 
     handleSearch(){
-        this.forceUpdate();
         console.log("Should have updated the sl");
         let res: GetMethodResult = this.sl.get(this.state.search_key);
         this.animate(res);

@@ -2,100 +2,95 @@ import java.util.ArrayList;
 
 public class SeqNode<Key extends Comparable<Key>, Value> {
 
-  public ArrayList<SeqNode<Key, Value>> prevs;
-  public ArrayList<SeqNode<Key, Value>> nexts;
+	public ArrayList<SeqNode<Key, Value>> prevs;
+	public ArrayList<SeqNode<Key, Value>> nexts;
 
-  private Key key;
-  private Value value;
+	private Key key;
+	private Value value;
 
-  enum Type {
-    root,
-    node,
-    cap
-  }
-
-
-  private Type type;
+	enum Type {
+		root,
+		node,
+		cap
+	}
 
 
-  public SeqNode(ArrayList<SeqNode<Key, Value>> prevs, ArrayList<SeqNode<Key, Value>> nexts, Key key,
-                 Value val, Type type) {
-    this.prevs = prevs;
-    this.nexts = nexts;
-    this.key = key;
-    this.value = val;
-    this.type = type;
-  }
-
-  //initializes a Node with empty prevs and nexts
-  public SeqNode(Key key, Value val, Type t) {
-    this(new ArrayList<SeqNode<Key, Value>>(), new ArrayList<SeqNode<Key, Value>>(), key, val, t);
-  }
-
-  public SeqNode(Key key, Value val) {
-    this(new ArrayList<SeqNode<Key, Value>>(), new ArrayList<SeqNode<Key, Value>>(), key, val, Type.node);
-  }
-
-  public SeqNode(Type t) {
-    this(null, null, t);
-  }
-
-  public SeqNode() {
-    this(Type.node);
-  }
+	private Type type;
 
 
-  public boolean isLess(Key otherKey) {
-    if (this.type == Type.root) {
-      return true;
-    } else if (this.type == Type.cap) {
-      return false;
-    } else {
-      return this.key.compareTo(otherKey) < 0;
-    }
-  }
+	public SeqNode(ArrayList<SeqNode<Key, Value>> prevs, ArrayList<SeqNode<Key, Value>> nexts, Key key,
+				   Value val, Type type) {
+		this.prevs = prevs;
+		this.nexts = nexts;
+		this.key = key;
+		this.value = val;
+		this.type = type;
+	}
 
-  public boolean equals(Key otherKey) {
-    if (this.key == null)
-      return false;
-    else {
-      return this.key.compareTo(otherKey) == 0;
-    }
-  }
+	//initializes a Node with empty prevs and nexts
+	public SeqNode(Key key, Value val, Type t) {
+		this(new ArrayList<SeqNode<Key, Value>>(), new ArrayList<SeqNode<Key, Value>>(), key, val, t);
+	}
 
-  public int height() {
-    return nexts.size();
-  }
+	public SeqNode(Key key, Value val) {
+		this(new ArrayList<SeqNode<Key, Value>>(), new ArrayList<SeqNode<Key, Value>>(), key, val, Type.node);
+	}
 
-  @Override
-  public String toString() {
+	public SeqNode(Type t) {
+		this(null, null, t);
+	}
 
-    String str = "";
+	public SeqNode() {
+		this(Type.node);
+	}
 
-    for (int i = nexts.size() - 1; i >= 0; i--) {
-      SeqNode<Key, Value> currentNode = this;
 
-      while (currentNode.type != Type.cap) {
-        str += "{" + currentNode.key + ", " + currentNode.value + "} --> ";
-        currentNode = currentNode.nexts.get(i);
-      }
-      str += "{" + currentNode.getKey() + ", " + currentNode.getValue() + "}";
-      str += "\n";
-    }
+	public boolean isLess(Key otherKey) {
+		if (this.type == Type.root)
+			return true;
+		else if (this.type == Type.cap)
+			return false;
+		return this.key.compareTo(otherKey) < 0;
+	}
 
-    return str;
-  }
+	public boolean equals(Key otherKey) {
+		if (this.key == null)
+			return false;
+		return this.key.compareTo(otherKey) == 0;
+	}
 
-  public Key getKey() {
-    return key;
-  }
+	public int height() {
+		return nexts.size();
+	}
 
-  public Value getValue() {
-    return value;
-  }
+	@Override
+	public String toString() {
+		String str = "";
 
-  public Type getType() {
-    return type;
-  }
+		for (int i = nexts.size() - 1; i >= 0; i--) {
+			SeqNode<Key, Value> currentNode = this;
+
+			while (currentNode.type != Type.cap) {
+				str += "{" + currentNode.key + ", " + currentNode.value + "} --> ";
+				currentNode = currentNode.nexts.get(i);
+			}
+			str += "{" + currentNode.getKey() + ", " + currentNode.getValue() + "}";
+			str += "\n";
+		}
+
+		return str;
+	}
+
+	public Key getKey() {
+		return key;
+	}
+
+	public Value getValue() {
+		return value;
+	}
+
+	public Type getType() {
+		return type;
+	}
 
 }
