@@ -7,9 +7,9 @@ export enum type{
 export class SkipListNode{
     public prevs: SkipListNode[];
     public nexts: SkipListNode[];
-    private key: number | null;
-    private val: number | null;
-    private type: type;
+    private readonly key: number | null;
+    private readonly val: number | null;
+    private readonly type: type;
 
     constructor(prevs?: null, nexts?: null, key?: number | null, val?: number | null, nodeType?: type) {
         this.prevs = prevs || [];

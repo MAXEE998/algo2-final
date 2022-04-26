@@ -4,8 +4,8 @@ import {animationJson, GetMethodResult, SearchMethodResult, SkipList} from "./Sk
 export class SkipListC implements SkipList{
     private p: number = 1 / Math.E;
     private n: number;
-    private start: SkipListNode;
-    private terminus: SkipListNode;
+    private readonly start: SkipListNode;
+    private readonly terminus: SkipListNode;
     private height:number;
 
     public animations:animationJson[]=[];
@@ -123,7 +123,7 @@ export class SkipListC implements SkipList{
     }
 
 
-    public to2DArray(): SkipListNode[][]{ // we arent updating node's next fields to include
+    public to2DArray(): SkipListNode[][]{ // we aren't updating node's next fields to include
         let i: number = 0;
         let tmp: SkipListNode = this.start;
         let cols: SkipListNode[][] = [];
