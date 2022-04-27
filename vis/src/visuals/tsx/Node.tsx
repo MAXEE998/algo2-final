@@ -6,19 +6,23 @@ import {type} from '../../skiplist/SkipListNode';
 
 interface nodeProps{
     node: SkipListNode | undefined;
+    on_path: boolean;
+    is_target: boolean;
     r: number;
     c: number;
 }
 
-function getColor(node: SkipListNode){
-    switch (node.getType()){
-        case type.cap:
-            return `red`;
-        case type.node:
-            return `transparent`
-        case type.root:
-            return `green`;
-    }
+function getColor(node: SkipListNode, on_path: boolean=false, is_target: boolean=false){
+    if (is_target) return `purple`;
+    if (on_path) return `blue`
+        switch (node.getType()){
+            case type.cap:
+                return `red`;
+            case type.node:
+                return `transparent`
+            case type.root:
+                return `green`;
+        }
 }
 
 function setText(node: SkipListNode){
@@ -32,7 +36,7 @@ function setText(node: SkipListNode){
     }
 }
 
-function setNode(node: SkipListNode | undefined, r:number, c: number): (JSX.Element){
+function setNode(node: SkipListNode | undefined, r:number, c: number, on_path: boolean, is_target: boolean): (JSX.Element){
     if (node === undefined){
         return (
             <div id={`null-${r}-${c}`} className={"node-square"} style={{backgroundColor: `transparent`}}>
@@ -42,7 +46,7 @@ function setNode(node: SkipListNode | undefined, r:number, c: number): (JSX.Elem
         )
     }
     return (
-        <div id={`node-${node.getKey()}`} className={`node-square node-${r}-${c}`} style={{backgroundColor:getColor(node)}}>
+        <div id={`node-${node.getKey()}`} className={`node-square node-${r}-${c}`} style={{backgroundColor:getColor(node, on_path, is_target)}}>
             <p className={"node-square__text"}>{setText(node)}</p>
         </div>
     )
@@ -50,7 +54,7 @@ function setNode(node: SkipListNode | undefined, r:number, c: number): (JSX.Elem
 
 const Node = (props: nodeProps) =>{
     return (
-        setNode(props.node, props.r,props.c)
+        setNode(props.node, props.r,props.c, props.on_path, props.is_target)
     )
 }
 
