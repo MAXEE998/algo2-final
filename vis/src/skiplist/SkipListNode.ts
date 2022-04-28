@@ -4,6 +4,8 @@ export enum type{
     cap,
 }
 
+export type nodeID = number | null | type;
+
 export class SkipListNode{
     public prevs: SkipListNode[];
     public nexts: SkipListNode[];
@@ -17,6 +19,13 @@ export class SkipListNode{
         this.key = key || null;
         this.val = val || null;
         this.type = nodeType || type.root;
+    }
+
+    public getID(): nodeID {
+        if (this.type === type.node)
+            return this.key;
+        else
+            return this.type;
     }
 
     private compareTo(n2: number | null): number{

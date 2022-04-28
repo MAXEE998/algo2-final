@@ -4,29 +4,31 @@ import {SkipListNode} from "../../skiplist/SkipListNode";
 import {type} from '../../skiplist/SkipListNode';
 
 
-interface nodeProps{
+interface nodeProps {
     node: SkipListNode | undefined;
     on_path: boolean;
     is_target: boolean;
+    is_insertion: boolean;
     r: number;
     c: number;
 }
 
-function getColor(node: SkipListNode, on_path: boolean=false, is_target: boolean=false){
+function getColor(node: SkipListNode, on_path: boolean = false, is_target: boolean = false, is_insertion: boolean = false) {
     if (is_target) return `blue`;
-    if (on_path) return `purple`
-        switch (node.getType()){
-            case type.cap:
-                return `red`;
-            case type.node:
-                return `transparent`
-            case type.root:
-                return `green`;
-        }
+    if (is_insertion) return `yellow`;
+    if (on_path) return `purple`;
+    switch (node.getType()) {
+        case type.cap:
+            return `red`;
+        case type.node:
+            return `transparent`
+        case type.root:
+            return `green`;
+    }
 }
 
-function setText(node: SkipListNode){
-    switch (node.getType()){
+function setText(node: SkipListNode) {
+    switch (node.getType()) {
         case type.root:
             return `ROOT`;
         case type.node:
@@ -36,8 +38,8 @@ function setText(node: SkipListNode){
     }
 }
 
-function setNode(node: SkipListNode | undefined, r:number, c: number, on_path: boolean, is_target: boolean): (JSX.Element){
-    if (node === undefined){
+function setNode(node: SkipListNode | undefined, r: number, c: number, on_path: boolean, is_target: boolean, is_insertion: boolean): (JSX.Element) {
+    if (node === undefined) {
         return (
             <div id={`null-${r}-${c}`} className={"node-square"} style={{backgroundColor: `transparent`}}>
                 <br className={"modified-b"}/>
@@ -46,15 +48,16 @@ function setNode(node: SkipListNode | undefined, r:number, c: number, on_path: b
         )
     }
     return (
-        <div id={`node-${node.getKey()}`} className={`node-square node-${r}-${c}`} style={{backgroundColor:getColor(node, on_path, is_target)}}>
+        <div id={`node-${node.getKey()}`} className={`node-square node-${r}-${c}`}
+             style={{backgroundColor: getColor(node, on_path, is_target, is_insertion)}}>
             <p className={"node-square__text"}>{setText(node)}</p>
         </div>
     )
 }
 
-const Node = (props: nodeProps) =>{
+const Node = (props: nodeProps) => {
     return (
-        setNode(props.node, props.r,props.c, props.on_path, props.is_target)
+        setNode(props.node, props.r, props.c, props.on_path, props.is_target, props.is_insertion)
     )
 }
 
