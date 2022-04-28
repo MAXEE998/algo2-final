@@ -23,5 +23,7 @@ export interface SearchMethodResult{ // special type of response for search meth
 export interface animationJson{ // special structure for animation
     c1: SkipListNode | null;
     c2: SkipListNode | null;
+    c3: SkipListNode | null;
+    levelUp: number | null;
     slState: SkipListC;
 }

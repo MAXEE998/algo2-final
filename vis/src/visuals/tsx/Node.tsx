@@ -13,8 +13,8 @@ interface nodeProps{
 }
 
 function getColor(node: SkipListNode, on_path: boolean=false, is_target: boolean=false){
-    if (is_target) return `purple`;
-    if (on_path) return `blue`
+    if (is_target) return `blue`;
+    if (on_path) return `purple`
         switch (node.getType()){
             case type.cap:
                 return `red`;

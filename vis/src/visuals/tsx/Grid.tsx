@@ -2,17 +2,29 @@ import React from "react";
 import {SkipListC} from "../../skiplist/SkipListC";
 import Node from './Node';
 import {SkipListNode, type} from "../../skiplist/SkipListNode";
-import {GetMethodResult} from "../../skiplist/SkipList";
+import {animationJson, GetMethodResult} from "../../skiplist/SkipList";
 
+// interface GridState {
+//     size: number;
+//     slArray: SkipListNode[][];
+//     search_key: null | number;
+//     search_result: null | number;
+//     animations: animationJson[];
+//     path_nodes: (SkipListNode | null)[];
+//     target_node: null | SkipListNode;
+//     animation_step: number;
+// }
 
 class Grid extends React.Component<any, any> {
     private sl: SkipListC;
+    private prev_sl: SkipListC;
     private max = 30; // max/min # of insertions
     private min = 5;
 
     constructor(props: any) {
         super(props);
         this.sl = new SkipListC();
+        this.prev_sl = this.sl;
         this.state = {
             size: 5,
             slArray: [],
@@ -76,8 +88,7 @@ class Grid extends React.Component<any, any> {
 
     onChangeVal(e: any) {
         e.preventDefault();
-        this.setState({[e.target.name]: e.target.value, animations: [], search_result: null});
-        console.log(this.state.search_key);
+        this.setState({[e.target.name]: e.target.value});
     }
 
     componentDidMount() {
@@ -85,18 +96,47 @@ class Grid extends React.Component<any, any> {
     }
 
     skipGrid() {
+        let marked = new Map<SkipListNode, number>();
+        let cnt = new Map<SkipListNode, number>();
+        if (this.state.target !== null) cnt.set(this.state.target, 1);
+        this.state.path_nodes.forEach((node: SkipListNode) => {
+            if (cnt.has(node)) {
+                // @ts-ignore
+                cnt.set(node, cnt.get(node)+1);
+            } else {
+                cnt.set(node, 1);
+            }
+        })
         return this.state.slArray.slice(0).reverse().map((row: SkipListNode[], rindex: number) => {
             return (
                 <div className={"row m-0 p-0 justify-content-center"}>
                     {
                         row.map((col: SkipListNode, cindex: number) => {
+                            let on_path: boolean = false;
+                            let is_target: boolean = false;
+                            // @ts-ignore
+                            if (!marked.has(col)&& this.state.path_nodes.includes(col)) {
+                                on_path = true;
+                                marked.set(col, 1);
+                            } else { // @ts-ignore
+                                if (marked.get(col) < cnt.get(col)) {
+                                    on_path = true;
+                                    // @ts-ignore
+                                    marked.set(col, marked.get(col) + 1);
+                                }
+                            }
+
+                            if (!marked.has(col) && col === this.state.target_node) {
+                                is_target = true;
+                                marked.set(col, 1);
+                            }
                             return (
                                 <div className={"col-auto p-0 m-0"}><Node
                                     node={col}
                                     r={rindex}
                                     c={cindex}
-                                    on_path={this.state.path_nodes.includes(col)}
-                                    is_target={col === this.state.target}
+                                    on_path={on_path}
+                                    is_target={is_target}
                                 /></div>
                             )
                         })
@@ -107,6 +147,7 @@ class Grid extends React.Component<any, any> {
     }
 
     animate(res: GetMethodResult) {
+        console.log(res.animations)
         this.setState({search_result: res.val === null ? "No Value Found" : res.val,
             animations: res.animations,
             animation_step: 0,
@@ -116,23 +157,27 @@ class Grid extends React.Component<any, any> {
     }
 
     handleSearch() {
-        console.log("Should have updated the sl");
         let res: GetMethodResult = this.sl.get(this.state.search_key);
         this.animate(res);
-        this.setState({search_key: null});
     }
 
-    renderList() {
-        this.sl = new SkipListC();
-        for (let i: number = 0; i < this.state.size; i++) {
-            let key: number = Math.floor(Math.random() * 100);
-            while (this.sl.get(key).val !== null) {
-                key = Math.floor(Math.random() * 100); // allow for a speedier animation
+    renderList(build: boolean = true, prev: boolean = false) {
+
+        if (build) {
+            this.sl = new SkipListC();
+            this.prev_sl = this.sl;
+            for (let i: number = 0; i < this.state.size; i++) {
+                let key: number = Math.floor(10 + Math.random() * 90);
+                while (this.sl.get(key).val !== null) {
+                    key = Math.floor(10 + Math.random() * 90); // allow for a speedier animation
+                }
+                this.sl.insert(key, key);
             }
-            this.sl.insert(key, key);
         }
-        let res: SkipListNode[][] = this.sl.to2DArray();
-        this.setState({slArray: res[0].map((_, colIndex) => res.map(row => row[colIndex])),
+
+        let res: SkipListNode[][] = prev ? this.prev_sl.to2DArray() : this.sl.to2DArray();
+        this.setState({
+            slArray: res[0].map((_, colIndex) => res.map(row => row[colIndex])),
             animations: [],
             animation_step: 0,
             path_nodes: [],
@@ -147,7 +192,16 @@ class Grid extends React.Component<any, any> {
             <div>
                 <div className={"skiplist-form"}>
                     <h4>Graph Params</h4>
-
+                    <br/>
+                    <button className={"btn btn-dark"} onClick={() => {
+                        console.log("Original")
+                        console.log(this.sl);
+                        this.sl = this.sl.clone();
+                        console.log("Cloned")
+                        console.log(this.sl);
+                        this.renderList(false);
+                    }}>Get Cloned
+                    </button>
                     <label>Number of Elements: {this.state.size}(20+ for larger screens)</label><br/>
 
                     {this.min}<input type="range" name="size" className="skiplist-form__range" id="range"
