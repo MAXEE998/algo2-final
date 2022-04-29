@@ -169,7 +169,7 @@ class Grid extends React.Component<any, GridState> {
         }
 
         // State change for deletion
-        if (new_step !== 0 && this.state.animations[new_step-1].deletion) {
+        if (this.state.animations[0].deletion && new_step !== this.state.animations.length) {
             grid_state = state.previous;
         }
 
