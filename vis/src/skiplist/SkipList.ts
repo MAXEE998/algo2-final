@@ -3,8 +3,8 @@ import {SkipListC} from "./SkipListC";
 
 export interface SkipList{ // interface for skiplist
     get(key: number): GetMethodResult;
-    delete(key: number): {}[];
-    insert(key: number, val: number): void;
+    delete(key: number): DeleteMethodResult;
+    insert(key: number, val: number): InsertMethodResult;
     toString():string;
     isEmpty():boolean;
     size():number;
@@ -24,11 +24,17 @@ export interface InsertMethodResult{
     animations:animationJson[];
 }
 
+export interface DeleteMethodResult{
+    val: number | null;
+    animations:animationJson[];
+}
+
 export interface animationJson{ // special structure for animation
     c1: SkipListNode | null;
     c2: SkipListNode | null;
     c3: SkipListNode | null;
     row: number | null;
-    levelUp: number | null;
+    newNodeLevel: number | null;
     slState: SkipListC;
+    deletion?: boolean;
 }

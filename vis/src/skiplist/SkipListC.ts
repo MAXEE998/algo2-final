@@ -1,5 +1,5 @@
 import {SkipListNode, type} from "./SkipListNode";
-import {animationJson, GetMethodResult, InsertMethodResult, SearchMethodResult, SkipList} from "./SkipList";
+import {animationJson, GetMethodResult, InsertMethodResult, SearchMethodResult, DeleteMethodResult, SkipList} from "./SkipList";
 
 interface SkipListCProps {
     p: number;
@@ -86,7 +86,7 @@ export class SkipListC implements SkipList {
             c2: null,
             c3: null,
             row: this.height - 1,
-            levelUp: null,
+            newNodeLevel: null,
             "slState": this
         };
         this.animations.push(animation);
@@ -100,7 +100,7 @@ export class SkipListC implements SkipList {
                     c2: curr.nexts[i],
                     c3: null,
                     row: i,
-                    levelUp: null,
+                    newNodeLevel: null,
                     "slState": this
                 };
                 this.animations.push(animation);
@@ -113,7 +113,7 @@ export class SkipListC implements SkipList {
                 c2: null,
                 c3: null,
                 row: i,
-                levelUp: null,
+                newNodeLevel: null,
                 "slState": this
             };
             this.animations.push(animation);
@@ -126,11 +126,14 @@ export class SkipListC implements SkipList {
         return {val: res.element?.getValue() || null, animations: res.animations};
     }
 
-    public delete(key: number): ({}[]) {
+    public delete(key: number): DeleteMethodResult {
         let res: SearchMethodResult = this.search(key);
         let node: SkipListNode | null = res.element;
         if (node == null) {
-            return res.animations;
+            return {
+                val: null,
+                animations: res.animations
+            };
         }
         this.animations = [];
         for (let i: number = 0; i < node.nexts.length; i++) {
@@ -139,8 +142,25 @@ export class SkipListC implements SkipList {
             b.nexts[i] = a;
             a.prevs[i] = b;
         }
+        res.animations.forEach(animation => {
+            animation.deletion = true;
+            return animation
+        })
+
+        res.animations.push({
+            c1: null,
+            c2: null,
+            c3: null,
+            row: null,
+            newNodeLevel: null,
+            slState: this,
+        });
         this.n -= 1;
-        return [];
+        return {
+            //@ts-ignore
+            val: res.element.getKey(),
+            animations: res.animations
+        };
     }
 
 
@@ -155,7 +175,7 @@ export class SkipListC implements SkipList {
             c2: null,
             c3: null,
             row: null,
-            levelUp: levels - this.height > 0 ? levels - this.height : 0,
+            newNodeLevel: levels,
             slState: this.clone()
         })
 
@@ -175,7 +195,7 @@ export class SkipListC implements SkipList {
                 c2: null,
                 c3: null,
                 row: i,
-                levelUp: null,
+                newNodeLevel: null,
                 slState: this
             });
 
@@ -186,7 +206,7 @@ export class SkipListC implements SkipList {
                     c2: null,
                     c3: null,
                     row: i,
-                    levelUp: null,
+                    newNodeLevel: null,
                     slState: this
                 });
             }
@@ -197,7 +217,7 @@ export class SkipListC implements SkipList {
                     c2: null,
                     c3: back,
                     row: i,
-                    levelUp: null,
+                    newNodeLevel: null,
                     slState: this
                 });
 
@@ -224,7 +244,7 @@ export class SkipListC implements SkipList {
             c2: newNode,
             c3: null,
             row: 0,
-            levelUp: null,
+            newNodeLevel: null,
             slState: this
         });
         this.n += 1;

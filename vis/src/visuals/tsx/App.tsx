@@ -8,7 +8,8 @@ class App extends React.Component<any, any>{
         return (
             <div>
                 <nav className={"header"}>
-                    <h2>Skip Lists by Cole Dumas and Jesse Tuglu</h2>
+                    <h2>Skip Lists by <a href={"https://jessetuglu.com/skiplist/"}>Cole Dumas and Jesse Tuglu</a>,</h2>
+                    <h2>Improved and extended by Hongyi Li and Tarun Ramesh Kumar</h2>
                 </nav>
                 <Grid/>
             </div>

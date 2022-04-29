@@ -1,5 +1,5 @@
 export enum type{
-    root,
+    root = -3,
     node,
     cap,
 }
@@ -40,7 +40,6 @@ export class SkipListNode{
         }
         return 0;
     }
-
 
     public isLess(n2: SkipListNode): boolean{
         if (this.type === type.root){
