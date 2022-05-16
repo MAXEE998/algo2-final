@@ -15,16 +15,16 @@ interface nodeProps {
 }
 
 function getColor(node: SkipListNode, on_path: boolean = false, is_target: boolean = false, is_insertion: boolean = false) {
-    if (is_target) return `blue`;
-    if (is_insertion) return `yellow`;
-    if (on_path) return `purple`;
+    if (is_target) return `rgba(0, 0, 255, 0.7)`;
+    if (is_insertion) return `rgba(255, 255, 0, 0.7)`;
+    if (on_path) return `rgba(128, 0, 128, 0.7)`;
     switch (node.getType()) {
         case type.cap:
-            return `red`;
+            return `rgba(255, 0, 0, 0.7)`;
         case type.node:
             return `transparent`
         case type.root:
-            return `green`;
+            return `rgba(0, 255, 0, 0.7)`;
     }
 }
 
@@ -54,28 +54,31 @@ function setNode(node: SkipListNode | undefined, r: number, c: number,
     return (
         <div id={`node-${node.getKey()}`}
              className={`node-square node-${r}-${c}`}
-             style={{backgroundColor: getColor(node, on_path, is_target, is_insertion)}}>
+             style={{backgroundColor: getColor(node, on_path, is_target, is_insertion)}}
+             onClick={_ => {
+                 // @ts-ignore
+                 setDeleteKey(+node.getKey());
+             }}
+             onMouseOver={e => {
+                 if (node.getType() === type.node) {
+                     // @ts-ignore
+                     const target = e.target.querySelector('p');
+                     // @ts-ignore
+                     target.style["backgroundColor"] = "#ddff99";
+                 }
+             }}
+             onMouseOut={e => {
+                 if (node.getType() === type.node) {
+                     // @ts-ignore
+                     const target = e.target.querySelector('p');
+                     // @ts-ignore
+                     target.style["backgroundColor"] = "transparent";
+                 }
+             }}
+        >
             <p className={"node-square__text"}
-               onClick={_ => {
-                   // @ts-ignore
-                   setDeleteKey(+node.getKey());
-               }}
-               onMouseOver={e => {
-                   if (node.getType() === type.node) {
-                       const target = e.target;
-                       // @ts-ignore
-                       target.style["backgroundColor"] = "#ddff99";
-                   }
-               }}
-               onMouseOut={e => {
-                   if (node.getType() === type.node) {
-                       const target = e.target;
-                       // @ts-ignore
-                       target.style["backgroundColor"] = "transparent";
-                   }
-               }}
                style={{backgroundColor: "transparent"}}
-            >{setText(node)}</p>
+            ><b>{setText(node)}</b></p>
         </div>
     )
 }

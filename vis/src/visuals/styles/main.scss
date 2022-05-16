@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 $base-font: 'Roboto';
-html{
+html, h1, p, small, div{
   font-family: $base-font;
   //background-color:lightslategray;
 }
@@ -8,6 +8,30 @@ html{
 .header{
   text-align: center;
   font-size: 30px;
+}
+
+.welcome{
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding: 200px;
+  height:100vh;
+  width:100vw;
+  color: #d7d0c7;
+  text-align: left;
+  font-size: large;
+  transition: 300ms ease-out;
+}
+
+.mask{
+  position: absolute;
+  left: 0;
+  top: 0;
+  height:100vh;
+  width:100vw;
+  z-index: -1;
+  background-color: rgba(10,10,10, 0.8);
+  backdrop-filter: brightness(200%) contrast(200%) blur(20px) grayscale(80%);
 }
 /* Main Page Styling End */
 
@@ -36,6 +60,7 @@ html{
 .node-square{
   color: black;
   margin: 10px;
+  border-radius: 6px;
   width:50px;
   height:50px;
   outline: black solid 2px;
@@ -45,6 +70,7 @@ html{
   &__text{
     margin-top: unset;
     margin-bottom: unset;
+    pointer-events: none;
   }
   @media only screen and (max-width : 400px) {
     width: 30px;
@@ -79,14 +105,14 @@ button{
 .color-box{
   &-purple{
     color:white;
-    background-color: purple;
+    background-color: rgba(128, 0, 128, 0.99);
   }
   &-blue{
     color:white;
-    background-color: blue;
+    background-color: rgba(0, 0, 255, 0.99);
   }
   &-yellow{
     color:black;
-    background-color: yellow;
+    background-color: rgba(255, 255, 0, 0.99);
   }
 }

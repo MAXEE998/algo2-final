@@ -163,7 +163,23 @@ class Grid extends React.Component<any, GridState> {
                 grid_state = state.previous;
             else if (new_step < this.state.animations.length) {
                 grid_state = state.after_level;
-                explanation = <div>The inserted node will be ${this.state.animations[0].newNodeLevel}-level high.<img src="/head.png" alt="123123"/></div>
+                let coins = (n: number): JSX.Element[] => {
+                    const pics: JSX.Element[] = [];
+                    for (let i = 0; i < n - 1; i++) {
+                        pics.push(<img src="/head.png" alt="head" width={40} height={40}/>)
+                    }
+                    pics.push(<img src="/tail.png" alt="tail" width={40} height={40}/>)
+                    return pics;
+                }
+                explanation =
+                    <>
+                        <p>
+                            Coin toss: {coins(this.state.animations[0].newNodeLevel)}
+                        </p>
+                        <p>
+                            The inserted node will be {this.state.animations[0].newNodeLevel}-level high.
+                        </p>
+                    </>
             } else
                 grid_state = state.current;
         }
@@ -346,14 +362,19 @@ class Grid extends React.Component<any, GridState> {
             target_node: null,
             search_key: null,
             search_result: null,
-            insert_key: null
+            insert_key: null,
+            explanation: ""
         }); // transpose rows to cols LA!
     }
 
     explanationBox(): JSX.Element {
         if (this.state.explanation) {
             return <div className={"explanation-box"}>
-                <p> {this.state.explanation} </p>
+                {typeof this.state.explanation === "string" ?
+                    <p> {this.state.explanation} </p> :
+                    this.state.explanation
+                }
+
             </div>
         } else
             return <></>;
@@ -482,9 +503,7 @@ class Grid extends React.Component<any, GridState> {
                 <div ref="skiplist" className={"container-xxl mx-auto skiplist"}>
                     {this.skipGrid()}
                 </div>
-                <div className={"mask"}>
 
-                </div>
             </div>
         )
     }
