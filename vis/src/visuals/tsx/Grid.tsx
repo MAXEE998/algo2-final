@@ -3,6 +3,8 @@ import {SkipListC} from "../../skiplist/SkipListC";
 import Node from './Node';
 import {SkipListNode, type, nodeID} from "../../skiplist/SkipListNode";
 import {animationJson, DeleteMethodResult, GetMethodResult, InsertMethodResult} from "../../skiplist/SkipList";
+import head from "../images/head.png"
+import tail from "../images/tail.png"
 
 interface GridState {
     state: state;
@@ -166,9 +168,9 @@ class Grid extends React.Component<any, GridState> {
                 let coins = (n: number): JSX.Element[] => {
                     const pics: JSX.Element[] = [];
                     for (let i = 0; i < n - 1; i++) {
-                        pics.push(<img src="/head.png" alt="head" width={40} height={40}/>)
+                        pics.push(<img src={head} alt="head" width={40} height={40}/>)
                     }
-                    pics.push(<img src="/tail.png" alt="tail" width={40} height={40}/>)
+                    pics.push(<img src={tail} alt="tail" width={40} height={40}/>)
                     return pics;
                 }
                 explanation =
