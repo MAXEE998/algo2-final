@@ -33,7 +33,8 @@ function setText(node: SkipListNode) {
         case type.root:
             return `ROOT`;
         case type.node:
-            return `K:${node.getKey()}\nV:${node.getValue()}`
+            return `K:${node.getKey()}` ;
+            //`\nV:${node.getValue()}`
         case type.cap:
             return `CAP`;
     }
@@ -46,7 +47,7 @@ function setNode(node: SkipListNode | undefined, r: number, c: number,
         return (
             <div id={`null-${r}-${c}`} className={"node-square"} style={{backgroundColor: `transparent`}}>
                 <br className={"modified-b"}/>
-                <p className={"node-square__text"}>===={'>'}</p>
+                <p className={"node-square__text"}>=={'>'}</p>
             </div>
         )
     }

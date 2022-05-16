@@ -16,7 +16,7 @@ interface GridState {
     path_nodes: Map<nodeID, Set<number>>;
     insertion_nodes: Map<nodeID, Set<number>>;
     target_node: [nodeID, number] | null;
-    explanation: string;
+    explanation: JSX.Element | string;
     animation_step: number;
 }
 
@@ -143,10 +143,10 @@ class Grid extends React.Component<any, GridState> {
 
     handle_animation_step(next: boolean = true) {
         if (!next) {
-            if (this.state.animations.length == 0 || this.state.animation_step == 0) {
+            if (this.state.animations.length === 0 || this.state.animation_step === 0) {
                 return;
             }
-        } else if (this.state.animations.length == 0 || this.state.animation_step == this.state.animations.length) {
+        } else if (this.state.animations.length === 0 || this.state.animation_step === this.state.animations.length) {
             return;
         }
 
@@ -155,7 +155,7 @@ class Grid extends React.Component<any, GridState> {
         let target_node: [nodeID, number] | null = null;
         let new_step = this.state.animation_step + (next ? 1 : -1);
         let grid_state: state = state.current;
-        let explanation: string = "";
+        let explanation: JSX.Element | string = "";
 
         // State change for insertion
         if (this.state.animations[0].newNodeLevel !== null) {
@@ -163,7 +163,7 @@ class Grid extends React.Component<any, GridState> {
                 grid_state = state.previous;
             else if (new_step < this.state.animations.length) {
                 grid_state = state.after_level;
-                explanation = `The inserted node will be ${this.state.animations[0].newNodeLevel}-level high.`
+                explanation = <div>The inserted node will be ${this.state.animations[0].newNodeLevel}-level high.<img src="/head.png" alt="123123"/></div>
             } else
                 grid_state = state.current;
         }
@@ -364,10 +364,10 @@ class Grid extends React.Component<any, GridState> {
     }
 
     renderBuild(): JSX.Element {
-        return <>
-            <h4>Graph Params</h4>
+        return <section className="op">
+            <h4>Build</h4>
 
-            <label>Number of Elements: {this.state.size}(20+ for larger screens)</label><br/>
+            <label>Number of Elements: {this.state.size}<br/>(20+ for larger screens)</label><br/>
 
             {this.min}<input type="range" name="size" className="skiplist-form__range" id="range"
                              onChange={this.onChangeVal} value={this.state.size} max={this.max}
@@ -379,41 +379,42 @@ class Grid extends React.Component<any, GridState> {
             }}>Build
             </button>
             <br/>
-        </>
+        </section>
     }
 
     renderInsert(): JSX.Element {
-        return <>
-            <h4>Insert An Element (between 0 and 100)</h4>
+        return <section className="op">
+            <h4>Insert</h4>
 
             <small className={"color-box-purple"}>Purple: Path</small><br/>
 
             <small className={"color-box-blue"}>Blue: New Element</small><br/>
 
-            <small className={"color-box-yellow"}>Yellow: Insertion Point</small><br/><br/>
+            <small className={"color-box-yellow"}>Yellow: Insertion Point</small><br/>
+
+            <small> Key should be between 0 and 100 </small><br/>
             <input type={"number"}
                    name={"insert_key"}
                 // @ts-ignore
                    value={this.state.insert_key === null ? "" : this.state.insertion_key}
                    onChange={this.onChangeVal}
                    placeholder={"Enter Key Here."}/>
-
-            <button className={"btn btn-dark"} onClick={this.handleInsert}>Insert</button>
             <br/>
-        </>
+            <button className={"btn btn-dark"} onClick={this.handleInsert}>Insert</button>
+        </section>
     }
 
     renderDelete(): JSX.Element {
-        return <>
-            <h4>Delete An Element in the Skiplist</h4>
+        return <section className="op">
+            <h4>Delete</h4>
 
             <small className={"color-box-purple"}>Purple: Path</small><br/>
 
             <small className={"color-box-blue"}>Blue: Element to be deleted</small><br/>
 
-            <label>Key to be deleted: {
+            <label>Key to be deleted: <br/>{
                     this.state.delete_key === null ?
-                         "Click on a key to select"
+                         <b>Click on a key to select</b>
                     :
                          <b>{this.state.delete_key}</b>
             }
@@ -421,13 +422,12 @@ class Grid extends React.Component<any, GridState> {
                 </label><br/>
 
             <button className={"btn btn-dark"} onClick={this.handleDelete}>Delete</button>
-            <br/>
-        </>
+        </section>
     }
 
     renderSearch(): JSX.Element {
-        return <>
-            <h4>Search For An Element</h4>
+        return <section className="op">
+            <h4>Search</h4>
 
             <small className={"color-box-purple"}>Purple: Path</small><br/>
 
@@ -440,16 +440,17 @@ class Grid extends React.Component<any, GridState> {
                    value={this.state.search_key === null ? "" : this.state.search_key}
                    onChange={this.onChangeVal}
                    placeholder={"Enter Key Here."}/>
-
+            <br/>
             <button className={"btn btn-dark"} onClick={this.handleSearch}>Search</button>
             <br/>
             <label>{this.state.search_result === null ? "" : "Search Result: " + this.state.search_result}</label>
-            <br/><br/><br/>
-        </>
+        </section>
     }
 
     renderAnimationControl(): JSX.Element {
-        return <>
+        if (this.state.animations.length === 0)
+            return <></>
+        return <section className={"animation-control"}>
             <label> Animation Steps: {this.state.animation_step} / {this.state.animations.length} </label> <br/>
             <button className={"btn btn-dark"} onClick={this.handle_prev_animation_step}>Previous Animation
             </button>
@@ -460,7 +461,7 @@ class Grid extends React.Component<any, GridState> {
                 Clear Animations
             </button>
             <br/>
-        </>
+        </section>
     }
 
     render() {
@@ -468,17 +469,21 @@ class Grid extends React.Component<any, GridState> {
         return (
             <div>
                 <div className={"skiplist-form"}>
-
+                <div className={"control-panel"}>
                     {this.renderBuild()}
                     {this.renderInsert()}
                     {this.renderDelete()}
                     {this.renderSearch()}
+                </div>
                     {this.renderAnimationControl()}
 
                 </div>
                 {this.explanationBox()}
                 <div ref="skiplist" className={"container-xxl mx-auto skiplist"}>
                     {this.skipGrid()}
+                </div>
+                <div className={"mask"}>
+
                 </div>
             </div>
         )

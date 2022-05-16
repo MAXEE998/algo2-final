@@ -18,6 +18,12 @@ html{
   text-align: center;
 }
 
+.control-panel{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .skiplist{
   margin: 0;
   padding: 0;
@@ -30,11 +36,15 @@ html{
 .node-square{
   color: black;
   margin: 10px;
-  width:60px;
-  height:60px;
+  width:50px;
+  height:50px;
   outline: black solid 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   &__text{
-    text-align: center;
+    margin-top: unset;
+    margin-bottom: unset;
   }
   @media only screen and (max-width : 400px) {
     width: 30px;
@@ -46,6 +56,20 @@ html{
 
 .explanation-box {
   text-align: center;
+}
+
+section.op{
+  margin: 25px;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 25% 10%;
+}
+
+section.animation-control{
+  margin: 25px;
+  padding: 10px;
+  border: 2px solid lightseagreen;
+  border-radius: 20px;
 }
 
 button{
