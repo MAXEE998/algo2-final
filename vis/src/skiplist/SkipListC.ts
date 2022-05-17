@@ -11,7 +11,7 @@ interface SkipListCProps {
 }
 
 export class SkipListC implements SkipList {
-    private p: number = 1 / Math.E;
+    private p: number = 1 / 2;
     private n: number;
     private readonly start: SkipListNode;
     private readonly terminus: SkipListNode;
