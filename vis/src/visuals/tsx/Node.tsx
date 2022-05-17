@@ -1,7 +1,6 @@
 import React from 'react';
 import '../styles/main.scss';
-import {SkipListNode} from "../../skiplist/SkipListNode";
-import {type} from '../../skiplist/SkipListNode';
+import {SkipListNode, type} from "../../skiplist/SkipListNode";
 
 
 interface nodeProps {
@@ -56,8 +55,10 @@ function setNode(node: SkipListNode | undefined, r: number, c: number,
              className={`node-square node-${r}-${c}`}
              style={{backgroundColor: getColor(node, on_path, is_target, is_insertion)}}
              onClick={_ => {
-                 // @ts-ignore
-                 setDeleteKey(+node.getKey());
+                 if (node?.getType() === type.node) {
+                     // @ts-ignore
+                     setDeleteKey(+node.getKey());
+                 }
              }}
              onMouseOver={e => {
                  if (node.getType() === type.node) {
