@@ -1,7 +1,7 @@
 import React from "react";
 import {SkipListC} from "../../skiplist/SkipListC";
 import Node from './Node';
-import {SkipListNode, nodeID} from "../../skiplist/SkipListNode";
+import {nodeID, SkipListNode, type} from "../../skiplist/SkipListNode";
 import {animationJson, DeleteMethodResult, GetMethodResult, InsertMethodResult} from "../../skiplist/SkipList";
 import head from "../images/head.png"
 import tail from "../images/tail.png"
@@ -18,8 +18,9 @@ interface GridState {
     path_nodes: Map<nodeID, Set<number>>;
     insertion_nodes: Map<nodeID, Set<number>>;
     target_node: [nodeID, number] | null;
-    explanation: JSX.Element | string;
+    explanation: JSX.Element[];
     animation_step: number;
+    search_value: number | null
 }
 
 enum state {
@@ -41,7 +42,7 @@ class Grid extends React.Component<any, GridState> {
         this.previous_sl = this.sl;
         this.after_level_sl = this.sl;
         this.state = {
-            explanation: "",
+            explanation: [],
             state: state.current,
             size: 5,
             slArray: [],
@@ -53,7 +54,8 @@ class Grid extends React.Component<any, GridState> {
             path_nodes: new Map<nodeID, Set<number>>(),
             insertion_nodes: new Map<nodeID, Set<number>>(),
             target_node: null,
-            animation_step: 0
+            animation_step: 0,
+            search_value: null
         }
         this.onChangeVal = this.onChangeVal.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -81,7 +83,8 @@ class Grid extends React.Component<any, GridState> {
             path_nodes: new Map<nodeID, Set<number>>(),
             insertion_nodes: new Map<nodeID, Set<number>>(),
             target_node: null,
-            explanation: ""
+            explanation: [],
+            search_value: this.state.insert_key
         });
     }
 
@@ -127,11 +130,12 @@ class Grid extends React.Component<any, GridState> {
             state: state.previous,
             animations: res.animations,
             animation_step: 0,
-            delete_key: null,
+            search_value: this.state.delete_key,
             path_nodes: new Map<nodeID, Set<number>>(),
             insertion_nodes: new Map<nodeID, Set<number>>(),
             target_node: null,
-            explanation: ""
+            explanation: [],
+
         });
     }
 
@@ -157,40 +161,11 @@ class Grid extends React.Component<any, GridState> {
         let target_node: [nodeID, number] | null = null;
         let new_step = this.state.animation_step + (next ? 1 : -1);
         let grid_state: state = state.current;
-        let explanation: JSX.Element | string = "";
+        let explanation: JSX.Element[] = [];
+        let is_insertion = this.state.animations[0].newNodeLevel !== null;
 
-        // State change for insertion
-        if (this.state.animations[0].newNodeLevel !== null) {
-            if (new_step === 0)
-                grid_state = state.previous;
-            else if (new_step < this.state.animations.length) {
-                grid_state = state.after_level;
-                let coins = (n: number): JSX.Element[] => {
-                    const pics: JSX.Element[] = [];
-                    for (let i = 0; i < n - 1; i++) {
-                        pics.push(<img src={head} alt="head" width={40} height={40}/>)
-                    }
-                    pics.push(<img src={tail} alt="tail" width={40} height={40}/>)
-                    return pics;
-                }
-                explanation =
-                    <>
-                        <p>
-                            Coin toss: {coins(this.state.animations[0].newNodeLevel)}
-                        </p>
-                        <p>
-                            The inserted node will be {this.state.animations[0].newNodeLevel}-level high.
-                        </p>
-                    </>
-            } else
-                grid_state = state.current;
-        }
 
-        // State change for deletion
-        if (this.state.animations[0].deletion && new_step !== this.state.animations.length) {
-            grid_state = state.previous;
-        }
-
+        // animation for searching
         if (!this.state.animations[0].deletion || new_step !== this.state.animations.length) {
             for (let i: number = 0; i < new_step; i++) {
                 if (this.state.animations[i].c1 !== null) {
@@ -200,24 +175,73 @@ class Grid extends React.Component<any, GridState> {
                     rows.add(this.state.animations[i].row as number);
                     // @ts-ignore
                     path_nodes.set(c1.getID(), rows)
-                    // @ts-ignore
-                    console.log(c1.getID(), rows)
-                }
-                if (this.state.animations[i].c2 !== null) {
+                    if (i === new_step - 1) {
+                        let current_key: any = c1?.getID();
+                        if (current_key === type.root) {
+                            current_key = "root";
+                        }
+                        explanation.push(<p> {current_key} {'<'} {this.state.search_value}</p>);
+                    }
+                } else if (this.state.animations[i].c2 !== null) {
                     // @ts-ignore
                     target_node = [this.state.animations[i].c2.getID(), this.state.animations[i].row];
-                }
-                if (this.state.animations[i].c3 !== null) {
+                    if (i === new_step - 1 && !is_insertion) {
+                        explanation.push(<p>{this.state.search_value} is found.</p>);
+                    }
+                } else if (this.state.animations[i].c3 !== null) {
                     // @ts-ignore
-                    let c3 = this.state.animations[i].c3;
+                    let c3 = this.state.animations[i].c3
+                    let row = this.state.animations[i].row
                     // @ts-ignore
                     let rows: Set<number> = insertion_node.has(c3.getID()) ? insertion_node.get(c3.getID()) : new Set<number>();
-                    rows.add(this.state.animations[i].row as number);
+                    rows.add(row as number);
                     // @ts-ignore
                     insertion_node.set(c3.getID(), rows);
+                    if (i === new_step - 1) {
+                        let current_key: any = c3?.getID();
+                        if (current_key === type.root) {
+                            current_key = "root";
+                        }
+                        explanation.push(<p> {this.state.search_value} will be inserted after {current_key} on
+                            level {row}</p>);
+                    }
                 }
             }
         }
+
+        if (is_insertion) {
+            // State change for insertion
+            if (new_step === 0) {
+                grid_state = state.previous;
+            } else if (new_step < this.state.animations.length) {
+                grid_state = state.after_level;
+                let coins = (n: number): JSX.Element[] => {
+                    const pics: JSX.Element[] = [];
+                    for (let i = 0; i < n - 1; i++) {
+                        pics.push(<img src={head} alt="head" width={40} height={40}/>)
+                    }
+                    pics.push(<img src={tail} alt="tail" width={40} height={40}/>)
+                    return pics;
+                }
+                explanation.push(<p>Coin toss: {coins(this.state.animations[0].newNodeLevel as number)}</p>)
+                explanation.push(<p>The inserted node will be {this.state.animations[0].newNodeLevel}-level high.</p>)
+
+            } else {
+                grid_state = state.current;
+                explanation.push(<p>{this.state.search_value} has been inserted.</p>)
+            }
+        } else if (this.state.animations[0].deletion) {
+            // State change for deletion
+            if (new_step !== this.state.animations.length) {
+                grid_state = state.previous;
+            } else {
+                explanation.push(<p>{this.state.search_value} has been deleted.</p>)
+            }
+        } else if (typeof this.state.search_result === "string" && new_step === this.state.animations.length) {
+            // final explanation for search
+            explanation.push(<p>{this.state.search_value} is not found in the skiplist.</p>)
+        }
+
 
         // TODO: optimize it
         let res: SkipListNode[][];
@@ -319,7 +343,8 @@ class Grid extends React.Component<any, GridState> {
             path_nodes: new Map<nodeID, Set<number>>(),
             insertion_nodes: new Map<nodeID, Set<number>>(),
             target_node: null,
-            explanation: ""
+            explanation: [],
+            search_value: this.state.search_key
         });
     }
 
@@ -365,19 +390,19 @@ class Grid extends React.Component<any, GridState> {
             search_key: null,
             search_result: null,
             insert_key: null,
-            explanation: ""
+            explanation: []
         }); // transpose rows to cols LA!
     }
 
     explanationBox(): JSX.Element {
-        if (this.state.explanation) {
-            return <div className={"explanation-box"}>
-                {typeof this.state.explanation === "string" ?
-                    <p> {this.state.explanation} </p> :
+        if (this.state.animations.length) {
+            return <section className={"explanation-box"}>
+                {this.state.explanation.length === 0 ?
+                    <p> Press Next to start animation </p> :
                     this.state.explanation
                 }
 
-            </div>
+            </section>
         } else
             return <></>;
     }
@@ -436,13 +461,13 @@ class Grid extends React.Component<any, GridState> {
             <small className={"color-box-blue"}>Blue: Element to be deleted</small><br/>
 
             <label>Key to be deleted: <br/>{
-                    this.state.delete_key === null ?
-                         <b>Click on a key to select</b>
+                this.state.delete_key === null ?
+                    <b>Click on a key to select</b>
                     :
-                         <b>{this.state.delete_key}</b>
+                    <b>{this.state.delete_key}</b>
             }
 
-                </label><br/>
+            </label><br/>
 
             <button className={"btn btn-dark"} onClick={this.handleDelete}>Delete</button>
         </section>
@@ -474,16 +499,18 @@ class Grid extends React.Component<any, GridState> {
         if (this.state.animations.length === 0)
             return <></>
         return <section className={"animation-control"}>
-            <label> Animation Steps: {this.state.animation_step} / {this.state.animations.length} </label> <br/>
-            <button className={"btn btn-dark"} onClick={this.handle_prev_animation_step}>Previous Animation
-            </button>
-            <button className={"btn btn-dark"} onClick={this.handle_next_animation_step}>Next Animation</button>
-            <button className={"btn btn-dark"} onClick={() => {
-                this.renderList(false);
-            }}>
-                Clear Animations
-            </button>
-            <br/>
+            <label> Animation Steps: {this.state.animation_step} / {this.state.animations.length} </label>
+            <div>
+                <button className={"btn btn-dark"} onClick={this.handle_prev_animation_step}>Previous
+                </button>
+                <button className={"btn btn-dark"} onClick={this.handle_next_animation_step}>Next</button>
+                <button className={"btn btn-dark"} onClick={() => {
+                    this.renderList(false);
+                }}>
+                    Clear
+                </button>
+            </div>
+
         </section>
     }
 
@@ -492,16 +519,19 @@ class Grid extends React.Component<any, GridState> {
         return (
             <div>
                 <div className={"skiplist-form"}>
-                <div className={"control-panel"}>
-                    {this.renderBuild()}
-                    {this.renderInsert()}
-                    {this.renderDelete()}
-                    {this.renderSearch()}
-                </div>
-                    {this.renderAnimationControl()}
+                    <div className={"control-panel"}>
+                        {this.renderBuild()}
+                        {this.renderInsert()}
+                        {this.renderDelete()}
+                        {this.renderSearch()}
+                    </div>
+                    <div className={"animation-panel"}>
+                        {this.renderAnimationControl()}
+                        {this.explanationBox()}
+                    </div>
 
                 </div>
-                {this.explanationBox()}
+
                 <div ref="skiplist" className={"container-xxl mx-auto skiplist"}>
                     {this.skipGrid()}
                 </div>

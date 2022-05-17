@@ -2,7 +2,6 @@
 $base-font: 'Roboto';
 html, h1, p, small, div{
   font-family: $base-font;
-  //background-color:lightslategray;
 }
 /* Main Page Styling */
 .header{
@@ -48,6 +47,12 @@ html, h1, p, small, div{
   justify-content: center;
 }
 
+.animation-panel{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .skiplist{
   margin-top: 20px;
   padding: 0;
@@ -82,6 +87,15 @@ html, h1, p, small, div{
 
 .explanation-box {
   text-align: center;
+  margin: 20px;
+  padding: 10px;
+  width: 300px;
+  height: 160px;
+  border: 4px solid #b22053;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 section.op{
@@ -92,11 +106,14 @@ section.op{
 }
 
 section.animation-control{
-  margin: 20px auto;
+  margin: 20px;
   padding: 10px;
   width: fit-content;
   border: 4px solid lightseagreen;
   border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 button{

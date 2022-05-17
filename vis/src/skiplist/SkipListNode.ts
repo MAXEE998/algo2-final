@@ -1,7 +1,7 @@
 export enum type{
     root = -3,
     node,
-    cap,
+    cap = 10000,
 }
 
 export type nodeID = number | null | type;
