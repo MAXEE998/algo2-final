@@ -1,7 +1,7 @@
 import React from "react";
 import {SkipListC} from "../../skiplist/SkipListC";
 import Node from './Node';
-import {SkipListNode, type, nodeID} from "../../skiplist/SkipListNode";
+import {SkipListNode, nodeID} from "../../skiplist/SkipListNode";
 import {animationJson, DeleteMethodResult, GetMethodResult, InsertMethodResult} from "../../skiplist/SkipList";
 import head from "../images/head.png"
 import tail from "../images/tail.png"
