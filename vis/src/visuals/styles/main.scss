@@ -64,10 +64,10 @@ html, h1, p, small, div{
 
 .node-square{
   color: black;
-  margin: 10px;
+  margin: 7px;
   border-radius: 6px;
-  width:50px;
-  height:50px;
+  width:43px;
+  height:43px;
   outline: black solid 2px;
   display: flex;
   justify-content: center;
@@ -133,4 +133,8 @@ button{
     color:black;
     background-color: rgba(255, 255, 0, 0.99);
   }
+}
+
+#biased{
+  margin: 5px
 }

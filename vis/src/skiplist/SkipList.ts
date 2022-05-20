@@ -4,7 +4,7 @@ import {SkipListC} from "./SkipListC";
 export interface SkipList{ // interface for skiplist
     get(key: number): GetMethodResult;
     delete(key: number): DeleteMethodResult;
-    insert(key: number, val: number): InsertMethodResult;
+    insert(key: number, val: number, biased: boolean): InsertMethodResult;
     toString():string;
     isEmpty():boolean;
     size():number;

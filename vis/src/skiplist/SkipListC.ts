@@ -10,6 +10,7 @@ interface SkipListCProps {
     animations?: animationJson[];
 }
 
+// @ts-ignore
 export class SkipListC implements SkipList {
     private p: number = 1 / 2;
     private n: number;
@@ -164,10 +165,10 @@ export class SkipListC implements SkipList {
     }
 
 
-    public insert(key: number, val: number): InsertMethodResult {
+    public insert(key: number, val: number, biased: boolean = false): InsertMethodResult {
         this.animations = [];
 
-        let levels: number = this.levels();
+        let levels: number = this.levels(biased);
         this.increase(levels);
         this.height = this.start.height();
         this.animations.push({
@@ -253,11 +254,13 @@ export class SkipListC implements SkipList {
         }
     }
 
-    private levels(): number {
-        if (Math.random() < this.p) {
-            return 1 + this.levels();
+    private levels(biased:boolean=false): number {
+        let p = biased ? 0.9 : this.p;
+        let levels = 1;
+        while (Math.random() < p && levels <= 10) {
+            levels += 1;
         }
-        return 1;
+        return levels;
     }
 
     private increase(levels: number): void {

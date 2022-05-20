@@ -20,7 +20,8 @@ interface GridState {
     target_node: [nodeID, number] | null;
     explanation: JSX.Element[];
     animation_step: number;
-    search_value: number | null
+    search_value: number | null;
+    biased_insert: boolean
 }
 
 enum state {
@@ -55,7 +56,8 @@ class Grid extends React.Component<any, GridState> {
             insertion_nodes: new Map<nodeID, Set<number>>(),
             target_node: null,
             animation_step: 0,
-            search_value: null
+            search_value: null,
+            biased_insert: false
         }
         this.onChangeVal = this.onChangeVal.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -69,11 +71,10 @@ class Grid extends React.Component<any, GridState> {
         this.explanationBox = this.explanationBox.bind(this);
         this.animateDelete = this.animateDelete.bind(this);
         this.setDeleteKey = this.setDeleteKey.bind(this);
+        this.handleBiasedChange = this.handleBiasedChange.bind(this);
     }
 
     animateInsert(res: InsertMethodResult) {
-        console.log(res.animations)
-
         this.after_level_sl = res.animations[0].slState;
 
         this.setState({
@@ -99,7 +100,7 @@ class Grid extends React.Component<any, GridState> {
             return;
         }
         this.previous_sl = this.sl.clone();
-        let res: InsertMethodResult = this.sl.insert(this.state.insert_key, this.state.insert_key);
+        let res: InsertMethodResult = this.sl.insert(this.state.insert_key, this.state.insert_key, this.state.biased_insert);
         this.animateInsert(res);
     }
 
@@ -334,7 +335,6 @@ class Grid extends React.Component<any, GridState> {
     }
 
     animateSearch(res: GetMethodResult) {
-        console.log(res.animations)
         this.setState({
             search_result: res.val === null ? "No Value Found" : res.val,
             animations: res.animations,
@@ -357,6 +357,13 @@ class Grid extends React.Component<any, GridState> {
         this.previous_sl = this.sl;
         let res: GetMethodResult = this.sl.get(this.state.search_key);
         this.animateSearch(res);
+    }
+
+    handleBiasedChange() {
+        console.log((this.state.biased_insert))
+        this.setState({
+            biased_insert: !this.state.biased_insert
+        })
     }
 
     renderList(build: boolean = true) {
@@ -448,7 +455,9 @@ class Grid extends React.Component<any, GridState> {
                    onChange={this.onChangeVal}
                    placeholder={"Enter Key Here."}/>
             <br/>
-            <button className={"btn btn-dark"} onClick={this.handleInsert}>Insert</button>
+            <button className={"btn btn-dark"} onClick={this.handleInsert}>Insert</button> <br/>
+        <input type={"checkbox"} id={"biased"} onChange={this.handleBiasedChange}/>
+            <label htmlFor={"biased"}> 9:1 biased coin</label>
         </section>
     }
 

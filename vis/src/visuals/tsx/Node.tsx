@@ -32,8 +32,8 @@ function setText(node: SkipListNode) {
         case type.root:
             return `ROOT`;
         case type.node:
-            return `K:${node.getKey()}` ;
-            //`\nV:${node.getValue()}`
+            return `${node.getKey()}` ;
+            //`K:${node.getKey()}\nV:${node.getValue()}`
         case type.cap:
             return `CAP`;
     }
